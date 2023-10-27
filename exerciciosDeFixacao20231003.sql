@@ -14,3 +14,21 @@ BEGIN
 END//
 
 DELIMITER ;
+
+--2--
+DELIMITER //
+CREATE FUNCTION listar_livros_por_autor(primeiro_nome VARCHAR(255), ultimo_nome VARCHAR(255)) RETURNS TEXT
+BEGIN
+    DECLARE list_livros TEXT;
+    DECLARE aut_id INT;
+    
+    SELECT id INTO autor_id FROM Autor WHERE primeiro_nome = primeiro_nome AND ultimo_nome = ultimo_nome;
+    
+    SELECT GROUP_CONCAT(titulo) INTO lista_livros 
+    FROM Livro 
+    WHERE id IN (SELECT id_livro FROM Livro_Autor WHERE id_autor = aut_id);
+    
+    RETURN list_livros;
+END//
+
+DELIMITER ;
